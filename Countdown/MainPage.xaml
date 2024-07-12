@@ -24,23 +24,52 @@
                              WidthRequest="450">
 
             <!-- Timer -->
-            <Label x:Name="Timer"
-                   HorizontalOptions="CenterAndExpand"
-                   FontSize="Title"
-                   Padding="30, 10, 30, 10"
-                   Margin="30, 100, 30, 30"
-                   Text="00:00"
-                   TextColor="Black"
-                   BackgroundColor="White"/>
+            <Frame Padding="0"
+                   CornerRadius="5"
+                   HorizontalOptions="Center"
+                   VerticalOptions="Center"
+                   Margin="30, 100, 30, 50">
+
+                <!-- Shading and Gradient for timer -->
+                <Grid>
+                    <BoxView>
+                        <BoxView.Background>
+                            <LinearGradientBrush EndPoint="1, 2.2">
+                                <GradientStop Color="White"
+                                              Offset="0.1"/>
+                                <GradientStop Color="Gray"
+                                              Offset="1.0"/>
+                            </LinearGradientBrush>
+                        </BoxView.Background>
+                    </BoxView>
+                    
+                    <Label x:Name="Timer"
+                           HorizontalOptions="CenterAndExpand"
+                           VerticalOptions="CenterAndExpand"
+                           FontSize="40"
+                           Padding="30, 10, 30, 10"
+                           Text="00:30"
+                           TextColor="Black"/>
+                </Grid>
+            </Frame>
+            
             <!-- Letters -->
-            <Label x:Name="LetterBox"
-                   HorizontalOptions="CenterAndExpand"
-                   FontSize="60"
-                   Margin="10, 5, 10, 2"
-                   Padding="10, 2, 10, 2"
-                   Text="LETTERSSS"
-                   TextColor="White"
-                   BackgroundColor="Blue"/>
+            <Frame Padding="0"
+                   VerticalOptions="Center"
+                   HorizontalOptions="Center"
+                   CornerRadius="0"
+                   BorderColor="White"
+                   Margin="10, 15, 10, 2">
+                
+                <Label x:Name="LetterBox"
+                       HorizontalOptions="CenterAndExpand"
+                       FontSize="60"
+                       Padding="10, 2, 10, 2"
+                       Text="AAAAAAAA"
+                       TextColor="White"
+                       BackgroundColor="Blue"/>
+
+            </Frame>
 
             <!-- Buttons -->
             <HorizontalStackLayout x:Name="ButtonContainer"
@@ -55,8 +84,8 @@
                         FontSize="20"
                         WidthRequest="125"
                         Padding="20"
-                        Margin="10, 0, 0, 0"
                         Text="Vowel"
+                        IsVisible="True"
                         Clicked="VButton_Clicked">
 
                     <Button.Shadow>
@@ -66,15 +95,14 @@
                     </Button.Shadow>
                 </Button>
 
-                <!-- TEST -->
                 <Button x:Name="CButton"
                          TextColor="White"
                          BackgroundColor="#006EFF"
                          FontSize="15"
                          WidthRequest="125"
                          Padding="20"
-                         Margin="10, 0, 0, 0"
-                         Text="Consonant"        
+                         Text="Consonant"
+                        IsVisible="True"
                          Clicked="CButton_Clicked">
 
                     <Button.Shadow>
@@ -146,6 +174,41 @@
                     </VerticalStackLayout>
                 </Border>
             </HorizontalStackLayout>
+
+            <!-- Text Boxes -->
+            <HorizontalStackLayout x:Name="EntriesContainer"
+                                   Spacing="45"
+                                   HorizontalOptions="Center">
+
+                <Entry x:Name="AnswerBox1"
+                       BackgroundColor="#D9ECFC"
+                       TextColor="Black"
+                       FontSize="20"
+                       Margin="10"
+                       MaxLength="9"
+                       ReturnType="Go"
+                       VerticalOptions="Center"
+                       HorizontalOptions="Center"
+                       IsTextPredictionEnabled="False"
+                       IsSpellCheckEnabled="False"
+                       WidthRequest="120"
+                       IsVisible="True"/>
+                
+                <Entry x:Name="AnswerBox2"
+                       BackgroundColor="#D9ECFC"
+                       TextColor="Black"
+                       FontSize="20"
+                       Margin="10"
+                       MaxLength="9"
+                       ReturnType="Go"
+                       VerticalOptions="Center"
+                       HorizontalOptions="Center"
+                       IsTextPredictionEnabled="False"
+                       IsSpellCheckEnabled="False"
+                       WidthRequest="120"
+                       IsVisible="True"/>
+            </HorizontalStackLayout>
+
         </VerticalStackLayout>
     </Grid>
     
