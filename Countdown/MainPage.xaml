@@ -66,6 +66,7 @@
                     </Button.Shadow>
                 </Button>
 
+                <!-- TEST -->
                 <Button x:Name="CButton"
                          TextColor="White"
                          BackgroundColor="#006EFF"
