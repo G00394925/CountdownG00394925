@@ -19,15 +19,16 @@
                                      
             </BoxView.Background>
         </BoxView>
-
-        <VerticalStackLayout>
+        
+        <VerticalStackLayout HeightRequest="800"
+                             WidthRequest="450">
 
             <!-- Timer -->
             <Label x:Name="Timer"
                    HorizontalOptions="CenterAndExpand"
-                   FontSize="Header"
+                   FontSize="Title"
                    Padding="30, 10, 30, 10"
-                   Margin="30"
+                   Margin="30, 100, 30, 30"
                    Text="00:00"
                    TextColor="Black"
                    BackgroundColor="White"/>
@@ -41,10 +42,53 @@
                    TextColor="White"
                    BackgroundColor="Blue"/>
 
+            <!-- Buttons -->
+            <HorizontalStackLayout x:Name="ButtonContainer"
+                                   Spacing="60"
+                                   HorizontalOptions="Center"
+                                   Margin="10, 30"
+                                   Padding="10">
+
+                <Button x:Name="VButton"
+                        TextColor="White"
+                        BackgroundColor="#006EFF"
+                        FontSize="20"
+                        WidthRequest="125"
+                        Padding="20"
+                        Margin="10, 0, 0, 0"
+                        Text="Vowel"
+                        Clicked="VButton_Clicked">
+
+                    <Button.Shadow>
+                        <Shadow Brush="Black"
+                                Offset="0, 3" 
+                                Radius="4"/>
+                    </Button.Shadow>
+                </Button>
+
+                <Button x:Name="CButton"
+                         TextColor="White"
+                         BackgroundColor="#006EFF"
+                         FontSize="15"
+                         WidthRequest="125"
+                         Padding="20"
+                         Margin="10, 0, 0, 0"
+                         Text="Consonant"        
+                         Clicked="CButton_Clicked">
+
+                    <Button.Shadow>
+                        <Shadow Brush="Black"
+                                Offset="0, 3" 
+                                Radius="4"/>
+                    </Button.Shadow>
+                </Button>
+            </HorizontalStackLayout>
+            
+            <!-- Player Info and Scores -->
             <HorizontalStackLayout x:Name="ScoreContainer"
                                    Spacing="60"
                                    HorizontalOptions="Center"
-                                   Margin="10, 20, 20, 10"
+                                   Margin="10, 10"
                                    Padding="10">
 
                 <!-- Player 1 Info -->

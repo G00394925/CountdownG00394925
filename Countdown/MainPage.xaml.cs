@@ -6,5 +6,15 @@
         {
             InitializeComponent();
         }
+
+        private void VButton_Clicked(object sender, EventArgs e)
+        {
+
+        }
+
+        private void CButton_Clicked(object sender, EventArgs e)
+        {
+
+        }
     }
 }
