@@ -1,0 +1,107 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Countdown.MainPage">
+
+    <Grid>
+
+        <!-- Background -->
+        <BoxView BackgroundColor="CornflowerBlue"
+                 HeightRequest="800"
+                 WidthRequest="450">
+            <BoxView.Background>
+                <LinearGradientBrush EndPoint="0.8,0.8">
+                    <GradientStop Color="CornflowerBlue"
+                                  Offset="0.1"/>
+                    <GradientStop Color="LightBlue"
+                                  Offset="1.0"/>
+                </LinearGradientBrush>
+                                     
+            </BoxView.Background>
+        </BoxView>
+
+        <VerticalStackLayout>
+
+            <!-- Timer -->
+            <Label x:Name="Timer"
+                   HorizontalOptions="CenterAndExpand"
+                   FontSize="Header"
+                   Padding="30, 10, 30, 10"
+                   Margin="30"
+                   Text="00:00"
+                   TextColor="Black"
+                   BackgroundColor="White"/>
+            <!-- Letters -->
+            <Label x:Name="LetterBox"
+                   HorizontalOptions="CenterAndExpand"
+                   FontSize="60"
+                   Margin="10, 5, 10, 2"
+                   Padding="10, 2, 10, 2"
+                   Text="LETTERSSS"
+                   TextColor="White"
+                   BackgroundColor="Blue"/>
+
+            <HorizontalStackLayout x:Name="ScoreContainer"
+                                   Spacing="60"
+                                   HorizontalOptions="Center"
+                                   Margin="10, 20, 20, 10"
+                                   Padding="10">
+
+                <!-- Player 1 Info -->
+                <Border Stroke="White"
+                        Padding="1">
+
+                    <VerticalStackLayout VerticalOptions="Start"
+                                         BackgroundColor="Blue"
+                                         WidthRequest="120">
+
+                        <Label x:Name="Score1"
+                               Text="0"
+                               FontSize="Large"
+                               HorizontalOptions="Center"
+                               Margin="10"/>
+
+                        <BoxView BackgroundColor="White"
+                                 HeightRequest="1"/>
+
+                        <Label x:Name="Name1"
+                               Text="Player 1"
+                               HorizontalOptions="CenterAndExpand"
+                               Margin="10"
+                               VerticalTextAlignment="End"
+                               FontSize="Caption"/>
+
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Player 2 Info -->
+                <Border Stroke="White"
+                        Padding="1">
+
+                    <VerticalStackLayout VerticalOptions="Start"
+                                         BackgroundColor="Blue"
+                                         WidthRequest="120">
+
+                        <Label x:Name="Score2"
+                               Text="0"
+                               FontSize="Large"
+                               HorizontalOptions="Center"
+                               Margin="10"/>
+
+                        <BoxView BackgroundColor="White"
+                                 HeightRequest="1"/>
+
+                        <Label x:Name="Name2"
+                               Text="Player 2"
+                               HorizontalOptions="CenterAndExpand"
+                               Margin="10"
+                               VerticalTextAlignment="End"
+                               FontSize="Caption"/>
+                        
+                    </VerticalStackLayout>
+                </Border>
+            </HorizontalStackLayout>
+        </VerticalStackLayout>
+    </Grid>
+    
+</ContentPage>
