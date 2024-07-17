@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Countdown.HomePage"
+             Title="HomePage">
+
+    <Grid>
+
+        <!-- Background -->
+        <BoxView BackgroundColor="CornflowerBlue"
+                 HeightRequest="800"
+                 WidthRequest="450">
+            <BoxView.Background>
+                <LinearGradientBrush EndPoint="0.8,0.8">
+                    <GradientStop Color="CornflowerBlue"
+                                  Offset="0.1"/>
+                    <GradientStop Color="LightBlue"
+                                  Offset="1.0"/>
+                </LinearGradientBrush>
+
+            </BoxView.Background>
+        </BoxView>
+
+        <!-- Welcome Screen -->
+        <VerticalStackLayout HeightRequest="800"
+                             WidthRequest="450">
+
+            <Border Margin="30, 85, 30, 50"
+                   VerticalOptions="CenterAndExpand"
+                   HorizontalOptions="CenterAndExpand"
+                   Stroke="White"
+                   StrokeThickness="5"
+                   Padding="0">
+
+                <Label Text="COUNTDOWN"
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center"
+                       Padding="10"
+                       FontSize="50"
+                       BackgroundColor="Blue"/>
+            </Border>
+
+            <!-- Menu Buttons -->
+            <Button x:Name="StartBtn"
+                    Text="New Game"
+                    HorizontalOptions="CenterAndExpand"
+                    VerticalOptions="CenterAndExpand"
+                    TextColor="White"
+                    BackgroundColor="#006EFF"
+                    FontSize="30"
+                    Margin="25"
+                    Clicked="StartBtn_Clicked">
+
+                <Button.Shadow>
+                        <Shadow Brush="Black"
+                            Offset="0, 3" 
+                            Radius="4"/>
+                    </Button.Shadow>
+            </Button>
+
+            <Button x:Name="LoadBtn"
+                    Text="Load Game"
+                    HorizontalOptions="CenterAndExpand"
+                    VerticalOptions="CenterAndExpand"
+                    TextColor="White"
+                    BackgroundColor="#006EFF"
+                    FontSize="30"
+                    Margin="25"
+                    Clicked="LoadBtn_Clicked">
+
+                <Button.Shadow>
+                    <Shadow Brush="Black"
+                            Offset="0, 3" 
+                            Radius="4"/>
+                </Button.Shadow>
+            </Button>
+
+            <Button x:Name="SettingsBtn"
+                    Text="Settings"
+                    HorizontalOptions="CenterAndExpand"
+                    VerticalOptions="CenterAndExpand"
+                    TextColor="White"
+                    BackgroundColor="#006EFF"
+                    FontSize="30"
+                    Margin="25">
+
+                <Button.Shadow>
+                    <Shadow Brush="Black"
+                            Offset="0, 3" 
+                            Radius="4"/>
+                </Button.Shadow>
+            </Button>
+
+        </VerticalStackLayout>
+
+    </Grid>
+
+</ContentPage>
