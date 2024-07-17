@@ -46,11 +46,6 @@
 
         }
 
-        private void UpdateStatus()
-        {
-
-        }
-
         private void UpdateTimer()
         {
 
