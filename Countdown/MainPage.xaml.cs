@@ -1,4 +1,5 @@
-﻿using Plugin.Maui.Audio;
+﻿using Microsoft.Maui.Graphics.Text;
+using Plugin.Maui.Audio;
 
 namespace Countdown
 {
@@ -14,20 +15,21 @@ namespace Countdown
 
         // Variables
         public int buttonPressed = 0;
-        public int pts1;
-        public int pts2;
         public int totalScore1;
         public int totalScore2;
         public int playerTurn;
         public int currentRound;
         public int rounds = 6;
         public int timeRemaining = 30;
+        public int wordLength1;
+        public int wordLength2;
+        public string word1;
+        public string word2;
 
         // Letter Arrays
         public char[] vowels = ['A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'I', 'I', 'I', 'I', 'I', 'I', 'I', 'I', 'I', 'I', 'I', 'I', 'I', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'U', 'U', 'U', 'U', 'U', 'U'];
         public char[] consonants = ['B', 'B', 'C', 'C', 'C', 'D', 'D', 'D', 'D', 'D', 'D', 'F', 'F', 'G', 'G', 'G', 'H', 'H', 'J', 'K', 'L', 'L', 'L', 'L', 'L', 'M', 'M', 'M', 'M', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'P', 'P', 'P', 'P', 'Q', 'R', 'R', 'R', 'R', 'R', 'R', 'R', 'R', 'R', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'T', 'T', 'T', 'T', 'T', 'T', 'T', 'T', 'T', 'V', 'W', 'X', 'Y', 'Z'];
         public char[] drawnLetters = new char[9]; // Store the drawn letters
-
         public MainPage(IAudioManager audioManager) // Audiomanager parameters were added to get and set audioManager object
         {
             InitializeComponent();
@@ -149,6 +151,24 @@ namespace Countdown
             StartTimer();
             PlayAudio();
 
+            await Task.Delay(31000);
+
+            // Ask for length of words and convert string to int
+            wordLength1 = Int32.Parse(await DisplayPromptAsync(Name1.Text, "How many letters in your word?")); 
+            wordLength2 = Int32.Parse(await DisplayPromptAsync(Name2.Text, "How many letters in your word?"));
+
+            await Task.Delay(1000);
+
+            // Ask for words
+            word1 = await DisplayPromptAsync(Name1.Text, "What is your word?");
+            word1 = word1.ToUpper();
+
+            word2 = await DisplayPromptAsync(Name2.Text, "What is your word?");
+            word2 = word2.ToUpper();
+
+            VerifyWord(word1, wordLength1);
+            VerifyWord(word2, wordLength2);
+
         }
         private async void PlayAudio()
         {
@@ -170,6 +190,7 @@ namespace Countdown
                 if(timeRemaining == 0)
                 {
                     timer.Stop(); // Stop timer once time reaches 0
+                    GameStatus.Text = "Time's up!";
                 }
             };
 
@@ -186,6 +207,46 @@ namespace Countdown
 
         }
 
+        private async void VerifyWord(string word, int length)
+        {
+            // Convert word to a character array
+            char[] wordChars = word.ToCharArray();
+
+            // Check that the word matches the length that was given by the player
+            if (wordChars.Length != length)
+            {
+                await DisplayAlert("Error", "The word you have chosen does not match the specified length of your word", "Okay");
+                return;
+            }
+
+            // Clone drawnLetters[] to be able to keep track of what letters were checked and to only check them once
+            char[] lettersAvailable = (char[])drawnLetters.Clone();
+
+            foreach (char letter in wordChars)
+            {
+                int found = 0;
+
+                for (int i = 0; i < lettersAvailable.Length; i++)
+                {
+                    if (lettersAvailable[i] == letter)
+                    {
+                        lettersAvailable[i] = '\0'; // The found letter is null 
+                        found = 1; 
+                        break;
+                    }
+                }
+
+                // If a letter is incorrectly used in the player's word
+                if (found != 1)
+                {
+                    await DisplayAlert("Error", "The word you chose does not contain any letters that were drawn", "Okay");
+                    return;
+                }
+            }
+
+            // !!! Dictionary Verification here !!!
+        }
+
         private void SaveGame()
         {
 
@@ -195,15 +256,5 @@ namespace Countdown
         {
         
         }
-        private void AnswerBox1_Completed(object sender, EventArgs e)
-        {
-
-        }
-
-        private void AnswerBox2_Completed(object sender, EventArgs e)
-        {
-
-        }
-
     }
 }
