@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using Plugin.Maui.Audio;
 
 namespace Countdown
 {
@@ -15,6 +16,8 @@ namespace Countdown
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                 });
 
+            builder.Services.AddSingleton(AudioManager.Current);
+            builder.Services.AddTransient<HomePage>();
 #if DEBUG
     		builder.Logging.AddDebug();
 #endif

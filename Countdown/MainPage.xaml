@@ -57,9 +57,11 @@
                     <Label x:Name="Timer"
                            HorizontalOptions="CenterAndExpand"
                            VerticalOptions="CenterAndExpand"
+                           WidthRequest="110"
                            FontSize="40"
                            Padding="30, 10, 30, 10"
-                           Text="00:30"
+                           Text="30"
+                           HorizontalTextAlignment="Center"
                            TextColor="Black"/>
                 </Grid>
             </Frame>
@@ -76,7 +78,7 @@
                        HorizontalOptions="CenterAndExpand"
                        FontSize="60"
                        Padding="10, 2, 10, 2"
-                       Text="AAAAAAAA"
+                       Text="WELCOME"
                        TextColor="White"
                        BackgroundColor="Blue"/>
 
