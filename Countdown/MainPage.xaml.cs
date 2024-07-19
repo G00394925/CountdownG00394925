@@ -1,16 +1,17 @@
 ﻿using Microsoft.Maui.Graphics.Text;
 using Plugin.Maui.Audio;
+using Microsoft.Maui.Storage;
 
 namespace Countdown
 {
     public partial class MainPage : ContentPage
     {
-        // Initialise the audio manager to be able to play the countdown theme
-        private readonly IAudioManager audioManager;
+        private readonly IAudioManager _audioManager; // Declare audioManager field
+        private readonly DownloadManager _downloadManager; // Declare downloadManager field
 
         IDispatcherTimer timer;
 
-        // Initialise random number generator
+        // Create random number generator
         Random r = new Random();
 
         // Variables
@@ -30,10 +31,13 @@ namespace Countdown
         public char[] vowels = ['A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'I', 'I', 'I', 'I', 'I', 'I', 'I', 'I', 'I', 'I', 'I', 'I', 'I', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'U', 'U', 'U', 'U', 'U', 'U'];
         public char[] consonants = ['B', 'B', 'C', 'C', 'C', 'D', 'D', 'D', 'D', 'D', 'D', 'F', 'F', 'G', 'G', 'G', 'H', 'H', 'J', 'K', 'L', 'L', 'L', 'L', 'L', 'M', 'M', 'M', 'M', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'P', 'P', 'P', 'P', 'Q', 'R', 'R', 'R', 'R', 'R', 'R', 'R', 'R', 'R', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'T', 'T', 'T', 'T', 'T', 'T', 'T', 'T', 'T', 'V', 'W', 'X', 'Y', 'Z'];
         public char[] drawnLetters = new char[9]; // Store the drawn letters
+
         public MainPage(IAudioManager audioManager) // Audiomanager parameters were added to get and set audioManager object
         {
             InitializeComponent();
-            this.audioManager = audioManager;
+            this._audioManager = audioManager;
+            _downloadManager = new DownloadManager();  
+            DownloadDictionary();
             StartGame();
         }
 
@@ -46,7 +50,7 @@ namespace Countdown
             currentRound = 1;
 
             // Periodically update the status message to reflect on what is currently happening in the game
-            GameStatus.Text = "Game Starting!";
+            GameStatus.Text = "Round " + currentRound + " begins!";
 
             // Wait 1 second to pace the game
             await Task.Delay(1000);
@@ -67,7 +71,6 @@ namespace Countdown
             }
 
             // Enable buttons
-
             VButton.IsEnabled = true;
             CButton.IsEnabled = true;
 
@@ -161,21 +164,21 @@ namespace Countdown
 
             // Ask for words
             word1 = await DisplayPromptAsync(Name1.Text, "What is your word?");
-            word1 = word1.ToUpper();
+            word1 = word1.ToUpper(); // Make word automatically uppercase for consistency 
 
             word2 = await DisplayPromptAsync(Name2.Text, "What is your word?");
             word2 = word2.ToUpper();
 
-            VerifyWord(word1, wordLength1);
-            VerifyWord(word2, wordLength2);
+            VerifyWord(word1, wordLength1, Name1.Text);
+            VerifyWord(word2, wordLength2, Name2.Text);
 
         }
         private async void PlayAudio()
         {
-            var player = audioManager.CreatePlayer(await FileSystem.OpenAppPackageFileAsync("clock.mp3"));
+            var player = _audioManager.CreatePlayer(await FileSystem.OpenAppPackageFileAsync("clock.mp3"));
 
-            player.Play();
-            await Task.Delay(32000); // Wait 32 seconds to prevent premature Dispose call
+            player.Play(); // Play the clock music 
+            await Task.Delay(32000); // Wait 32 seconds to allow the music to play fully
             player.Dispose(); // Dispose when not needed to prevent memory leak
         }
 
@@ -187,14 +190,14 @@ namespace Countdown
             {
                 Timer.Text = (--timeRemaining).ToString(); // Update the timer after every second
 
-                if(timeRemaining == 0)
+                if(timeRemaining == 0)  // Stop timer once time reaches 0
                 {
-                    timer.Stop(); // Stop timer once time reaches 0
+                    timer.Stop();
                     GameStatus.Text = "Time's up!";
                 }
             };
 
-            timer.Start();
+            timer.Start(); // Start the timer
         }
 
         private void NextRound()
@@ -207,7 +210,7 @@ namespace Countdown
 
         }
 
-        private async void VerifyWord(string word, int length)
+        private async void VerifyWord(string word, int length, string name)
         {
             // Convert word to a character array
             char[] wordChars = word.ToCharArray();
@@ -215,7 +218,7 @@ namespace Countdown
             // Check that the word matches the length that was given by the player
             if (wordChars.Length != length)
             {
-                await DisplayAlert("Error", "The word you have chosen does not match the specified length of your word", "Okay");
+                await DisplayAlert("Error", name + ", the word you have chosen does not match the specified length of your word", "Okay");
                 return;
             }
 
@@ -239,12 +242,32 @@ namespace Countdown
                 // If a letter is incorrectly used in the player's word
                 if (found != 1)
                 {
-                    await DisplayAlert("Error", "The word you chose does not contain any letters that were drawn", "Okay");
+                    await DisplayAlert("Error", name + ", the word you chose does not contain any letters that were drawn", "Okay");
                     return;
                 }
             }
 
             // !!! Dictionary Verification here !!!
+        }
+
+        private async void DownloadDictionary()
+        {
+            try
+            {
+                string url = "https://raw.githubusercontent.com/DonH-ITS/jsonfiles/main/cdwords.txt";
+                string file = "dictionary.txt";
+                string filePath = Path.Combine(FileSystem.AppDataDirectory, file);
+
+                if (!File.Exists(filePath)) // Check if dictionary already exists
+                {
+                    filePath = await _downloadManager.DownloadAsync(file, url); // Download the file 
+                }
+
+            }
+            catch (Exception ex)
+            {
+                await DisplayAlert("Error", ex.Message, "OK");
+            }
         }
 
         private void SaveGame()
