@@ -16,8 +16,8 @@ namespace Countdown
 
         // Variables
         public int buttonPressed = 0;
-        public int totalScore1;
-        public int totalScore2;
+        public int pts1;
+        public int pts2;
         public int playerTurn;
         public int currentRound;
         public int rounds = 6;
@@ -45,8 +45,8 @@ namespace Countdown
         {
             timer = Dispatcher.CreateTimer(); // Create the timer when game starts
             playerTurn = r.Next(1, 3); // Decides which player to go first
-            totalScore1 = 0;
-            totalScore2 = 0;
+            pts1 = 0;
+            pts2 = 0;
             currentRound = 1;
 
             // Periodically update the status message to reflect on what is currently happening in the game
@@ -113,7 +113,7 @@ namespace Countdown
                     CButton.IsEnabled = false;
 
                     GameStatus.Text = "Letters chosen..."; // Update game status
-                    await Task.Delay(3000);
+                    await Task.Delay(2000);
                     StartRound();
                 }
             }
@@ -170,9 +170,16 @@ namespace Countdown
             word2 = await DisplayPromptAsync(Name2.Text, "What is your word?");
             word2 = word2.ToUpper();
 
+            // Verify the words
             VerifyWord(word1, wordLength1, Name1.Text);
             VerifyWord(word2, wordLength2, Name2.Text);
 
+            // Update the score
+            UpdateScore(wordLength1, wordLength2);
+
+            GameStatus.Text = "Scores have been updated";
+
+            await Task.Delay(2000);
         }
         private async void PlayAudio()
         {
@@ -216,7 +223,6 @@ namespace Countdown
             if (wordChars.Length != length)
             {
                 await DisplayAlert("Error", name + ", the word you have chosen does not match the specified length of your word", "Okay");
-                UpdateScore(0, name); // Player recieves 0 points for invalid word
                 return;
             }
 
@@ -241,7 +247,6 @@ namespace Countdown
                 if (found != 1)
                 {
                     await DisplayAlert("Error", name + ", the word you chose does not contain any letters that were drawn", "Okay");
-                    UpdateScore(0, name);
                     return;
                 }
             }
@@ -257,32 +262,29 @@ namespace Countdown
             {
                 if (word == line) // Word found
                 {
-                    await DisplayAlert("Success", "Word verified in dictionary", "Okay");
-
-                    s.Close(); // Close file
-                    UpdateScore(wordChars.Length, name); // Add the points to the player's score
+                    s.Close(); 
                     return;
                 }
             }
             await DisplayAlert("Error", name + ", your word does not exist in the dictionary", "Okay"); // If word is not found in the dictionary
         }
 
-        private void UpdateScore(int pts, string name)
+        private async void UpdateScore(int length1, int length2)
         {
             // Convert the current scores to integers
             int currentScore1 = Int32.Parse(Score1.Text);
             int currentScore2 = Int32.Parse(Score2.Text);
 
-            if (name == Name1.Text)
+            if (length1 > length2) // Player 1 has longer word
             {
-                currentScore1 += pts; // Add the points to the current score
-                Score1.Text = currentScore1.ToString(); // Convert back to String and update the score
+                Score1.Text = (currentScore1 + length1).ToString(); // Add to player 1's score
+                await DisplayAlert("Congradulations " + Name1.Text, "You had the longest valid word!", "Hooray"); 
             }
 
-            if (name == Name2.Text)
+            if (length2 > length1) // Player 2 has longer word
             {
-                currentScore2 += pts;
-                Score2.Text = currentScore2.ToString();
+                Score2.Text = (currentScore2 + length2).ToString(); // Add to player 2's score
+                await DisplayAlert("Congradulations " + Name2.Text, "You had the longest valid word!", "Hooray");
             }
         }
 
