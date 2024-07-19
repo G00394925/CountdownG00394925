@@ -151,6 +151,7 @@ namespace Countdown
             GameStatus.Text = "Your time starts...";
             await Task.Delay(2000);
             GameStatus.Text = "Now!";
+
             StartTimer();
             PlayAudio();
 
@@ -164,7 +165,7 @@ namespace Countdown
 
             // Ask for words
             word1 = await DisplayPromptAsync(Name1.Text, "What is your word?");
-            word1 = word1.ToUpper(); // Make word automatically uppercase for consistency 
+            word1 = word1.ToUpper(); // Convert word to uppercase to avoid Case-Sensitive issues 
 
             word2 = await DisplayPromptAsync(Name2.Text, "What is your word?");
             word2 = word2.ToUpper();
@@ -205,10 +206,6 @@ namespace Countdown
             ++currentRound;
         }
 
-        private void GetPoints()
-        {
-
-        }
 
         private async void VerifyWord(string word, int length, string name)
         {
@@ -219,6 +216,7 @@ namespace Countdown
             if (wordChars.Length != length)
             {
                 await DisplayAlert("Error", name + ", the word you have chosen does not match the specified length of your word", "Okay");
+                UpdateScore(0, name); // Player recieves 0 points for invalid word
                 return;
             }
 
@@ -243,11 +241,49 @@ namespace Countdown
                 if (found != 1)
                 {
                     await DisplayAlert("Error", name + ", the word you chose does not contain any letters that were drawn", "Okay");
+                    UpdateScore(0, name);
                     return;
                 }
             }
 
-            // !!! Dictionary Verification here !!!
+            // Verify word in dictionary
+
+            word = word.ToLower(); // Convert to lowercase to avoid Case-Sensitive issues
+
+            StreamReader s = new StreamReader(Path.Combine(FileSystem.AppDataDirectory, "dictionary.txt")); // Open File
+            string line = "";
+
+            while ((line = s.ReadLine()) != null)
+            {
+                if (word == line) // Word found
+                {
+                    await DisplayAlert("Success", "Word verified in dictionary", "Okay");
+
+                    s.Close(); // Close file
+                    UpdateScore(wordChars.Length, name); // Add the points to the player's score
+                    return;
+                }
+            }
+            await DisplayAlert("Error", name + ", your word does not exist in the dictionary", "Okay"); // If word is not found in the dictionary
+        }
+
+        private void UpdateScore(int pts, string name)
+        {
+            // Convert the current scores to integers
+            int currentScore1 = Int32.Parse(Score1.Text);
+            int currentScore2 = Int32.Parse(Score2.Text);
+
+            if (name == Name1.Text)
+            {
+                currentScore1 += pts; // Add the points to the current score
+                Score1.Text = currentScore1.ToString(); // Convert back to String and update the score
+            }
+
+            if (name == Name2.Text)
+            {
+                currentScore2 += pts;
+                Score2.Text = currentScore2.ToString();
+            }
         }
 
         private async void DownloadDictionary()
