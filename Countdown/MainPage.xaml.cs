@@ -6,8 +6,9 @@ namespace Countdown
 {
     public partial class MainPage : ContentPage
     {
-        private readonly IAudioManager _audioManager; // Declare audioManager field
-        private readonly DownloadManager _downloadManager; // Declare downloadManager field
+        // Fields
+        private readonly IAudioManager _audioManager; 
+        private readonly DownloadManager _downloadManager; 
 
         IDispatcherTimer timer;
 
@@ -16,12 +17,10 @@ namespace Countdown
 
         // Variables
         public int buttonPressed = 0;
-        public int pts1;
-        public int pts2;
         public int playerTurn;
         public int currentRound;
         public int rounds = 6;
-        public int timeRemaining = 30;
+        public int timeRemaining;
         public int wordLength1;
         public int wordLength2;
         public string word1;
@@ -43,17 +42,13 @@ namespace Countdown
 
         private async void StartGame()
         {
-            timer = Dispatcher.CreateTimer(); // Create the timer when game starts
             playerTurn = r.Next(1, 3); // Decides which player to go first
-            pts1 = 0;
-            pts2 = 0;
             currentRound = 1;
 
             // Periodically update the status message to reflect on what is currently happening in the game
-            GameStatus.Text = "Round " + currentRound + " begins!";
+            GameStatus.Text = "Welcome to Countdown!";
 
-            // Wait 1 second to pace the game
-            await Task.Delay(1000);
+            await Task.Delay(1000); // Pacing
 
             // Prompt user to input names
             Name1.Text = await DisplayPromptAsync("Welcome to Countdown", "Enter the name for Player 1", maxLength: 9);
@@ -177,9 +172,21 @@ namespace Countdown
             // Update the score
             UpdateScore(wordLength1, wordLength2);
 
+            await Task.Delay(2000);
+
             GameStatus.Text = "Scores have been updated";
 
             await Task.Delay(2000);
+
+            GameStatus.Text = "Starting next round...";
+
+            await Task.Delay(2000);
+
+            // Begin next round out of no. of max rounds specified
+            if (currentRound < rounds)
+            {
+                NextRound();
+            }
         }
         private async void PlayAudio()
         {
@@ -193,24 +200,64 @@ namespace Countdown
         private void StartTimer()
         {
             timeRemaining = 30; // Reset the time
-            timer.Interval = TimeSpan.FromMilliseconds(1000); // Counts down for every 1 second
-            timer.Tick += (s, e) =>
+           
+            if(timer != null)
             {
-                Timer.Text = (--timeRemaining).ToString(); // Update the timer after every second
+                timer.Tick -= TimerTick;
+            }
 
-                if(timeRemaining == 0)  // Stop timer once time reaches 0
-                {
-                    timer.Stop();
-                    GameStatus.Text = "Time's up!";
-                }
-            };
+            timer = Dispatcher.CreateTimer(); // Create the timer 
+            timer.Interval = TimeSpan.FromMilliseconds(1000); // Counts down timer for every 1 second
+            timer.Tick += TimerTick;
 
             timer.Start(); // Start the timer
         }
 
-        private void NextRound()
+        private void TimerTick(object sender, EventArgs e)
         {
+            Timer.Text = (--timeRemaining).ToString();
+
+            if (timeRemaining == 0)
+            {
+                timer.Stop();
+                GameStatus.Text = "Time's up!";
+            }
+        }
+
+        private async void NextRound()
+        {
+            // Reset variabes
+            Timer.Text = "30";
             ++currentRound;
+            buttonPressed = 0;
+
+            // Switch the player
+            if (playerTurn == 1)
+            {
+                playerTurn = 2;
+            }
+            else
+            {
+                playerTurn = 1;
+            }
+
+            GameStatus.Text = "Round " + currentRound + " begin";
+            await Task.Delay(2000);
+
+            if (playerTurn == 1)
+            {
+                GameStatus.Text = Name1.Text + ", choose your letters";
+            }
+
+            else if (playerTurn == 2)
+            {
+                GameStatus.Text = Name2.Text + ", choose your letters";
+            }
+
+            VButton.IsEnabled = true;
+            CButton.IsEnabled = true;
+
+            LetterBox.Text = null; 
         }
 
 
@@ -222,7 +269,18 @@ namespace Countdown
             // Check that the word matches the length that was given by the player
             if (wordChars.Length != length)
             {
-                await DisplayAlert("Error", name + ", the word you have chosen does not match the specified length of your word", "Okay");
+               
+                if (name == Name1.Text)
+                {
+                    wordLength1 = 0; // Player gets 0 points if there is an issue with their word
+                    await DisplayAlert("Error", Name1.Text + ", the word you have chosen does not match the specified length of your word", "Okay");
+                }
+
+                else if (name == Name2.Text)
+                {
+                    wordLength2 = 0;
+                    await DisplayAlert("Error", Name2.Text + ", the word you have chosen does not match the specified length of your word", "Okay");
+                }
                 return;
             }
 
@@ -246,7 +304,18 @@ namespace Countdown
                 // If a letter is incorrectly used in the player's word
                 if (found != 1)
                 {
-                    await DisplayAlert("Error", name + ", the word you chose does not contain any letters that were drawn", "Okay");
+                    if (name == Name1.Text)
+                    {
+                        wordLength1 = 0;
+                        await DisplayAlert("Error", Name1.Text + ", the word you chose contains an invalid letter", "Okay");
+                    }
+
+                    else if (name == Name2.Text)
+                    {
+                        wordLength2 = 0;
+                        await DisplayAlert("Error", Name2.Text + ", the word you chose contains an invalid letter", "Okay");
+
+                    }
                     return;
                 }
             }
@@ -266,7 +335,19 @@ namespace Countdown
                     return;
                 }
             }
-            await DisplayAlert("Error", name + ", your word does not exist in the dictionary", "Okay"); // If word is not found in the dictionary
+
+            if (name == Name1.Text)
+            {
+                wordLength1 = 0;
+                await DisplayAlert("Error", Name1.Text + ", your word does not exist in the dictionary", "Okay"); // If word is not found in the dictionary
+            }
+
+            else if (name == Name2.Text)
+            {
+                wordLength2 = 0;
+                await DisplayAlert("Error", Name2.Text + ", your word does not exist in the dictionary", "Okay"); // If word is not found in the dictionary
+            }
+            return;
         }
 
         private async void UpdateScore(int length1, int length2)
@@ -278,13 +359,13 @@ namespace Countdown
             if (length1 > length2) // Player 1 has longer word
             {
                 Score1.Text = (currentScore1 + length1).ToString(); // Add to player 1's score
-                await DisplayAlert("Congradulations " + Name1.Text, "You had the longest valid word!", "Hooray"); 
+                GameStatus.Text = (Name1.Text + " wins the round!");
             }
 
             if (length2 > length1) // Player 2 has longer word
             {
                 Score2.Text = (currentScore2 + length2).ToString(); // Add to player 2's score
-                await DisplayAlert("Congradulations " + Name2.Text, "You had the longest valid word!", "Hooray");
+                GameStatus.Text = (Name2.Text + " wins the round!");
             }
         }
 
@@ -300,7 +381,6 @@ namespace Countdown
                 {
                     filePath = await _downloadManager.DownloadAsync(file, url); // Download the file 
                 }
-
             }
             catch (Exception ex)
             {
