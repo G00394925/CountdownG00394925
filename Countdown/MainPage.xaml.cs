@@ -1,14 +1,15 @@
 ﻿using Microsoft.Maui.Graphics.Text;
 using Plugin.Maui.Audio;
 using Microsoft.Maui.Storage;
+using System.Diagnostics;
 
 namespace Countdown
 {
     public partial class MainPage : ContentPage
     {
         // Fields
-        private readonly IAudioManager _audioManager; 
-        private readonly DownloadManager _downloadManager; 
+        private readonly IAudioManager _audioManager;
+        private readonly DownloadManager _downloadManager;
 
         IDispatcherTimer timer;
 
@@ -16,7 +17,7 @@ namespace Countdown
         Random r = new Random();
 
         // Variables
-        public int buttonPressed = 0;
+        public int buttonPressed;
         public int playerTurn;
         public int currentRound;
         public int rounds = 6;
@@ -35,15 +36,20 @@ namespace Countdown
         {
             InitializeComponent();
             this._audioManager = audioManager;
-            _downloadManager = new DownloadManager();  
+            _downloadManager = new DownloadManager();
             DownloadDictionary();
             StartGame();
         }
 
         private async void StartGame()
         {
+            // Set variables
             playerTurn = r.Next(1, 3); // Decides which player to go first
             currentRound = 1;
+            buttonPressed = 0;
+            Timer.Text = "30";
+            Score1.Text = "0";
+            Score2.Text = "0";
 
             // Periodically update the status message to reflect on what is currently happening in the game
             GameStatus.Text = "Welcome to Countdown!";
@@ -71,16 +77,16 @@ namespace Countdown
 
         }
 
-
+        // Vowel button pressed
         private async void VButton_Clicked(object sender, EventArgs e)
         {
-            if (buttonPressed < drawnLetters.Length) 
+            if (buttonPressed < drawnLetters.Length)
             {
                 char letter = GetLetter(1); // Aquire letter... number sent to differentiate between a vowel or consonant 
                 drawnLetters[buttonPressed] = letter;
                 buttonPressed++; // Keeps track of how many letters have been drawn
                 UpdateLetterBox();
-                
+
                 // Disable the buttons once there are enough letters
                 if (buttonPressed == 9)
                 {
@@ -94,6 +100,7 @@ namespace Countdown
             }
         }
 
+        // Consonant button prssed
         private async void CButton_Clicked(object sender, EventArgs e)
         {
             if (buttonPressed < drawnLetters.Length)
@@ -107,7 +114,7 @@ namespace Countdown
                     VButton.IsEnabled = false;
                     CButton.IsEnabled = false;
 
-                    GameStatus.Text = "Letters chosen..."; // Update game status
+                    GameStatus.Text = "Letters chosen...";
                     await Task.Delay(2000);
                     StartRound();
                 }
@@ -117,14 +124,14 @@ namespace Countdown
         {
             char currentLetter = ' ';
 
-            // Random Vowel
+            // Vowel
             if (num == 1)
             {
                 int v = r.Next(67);
                 currentLetter = vowels[v];
             }
 
-            // Random Consonant
+            // Consonant
             else if (num == 2)
             {
                 int c = r.Next(74);
@@ -153,7 +160,7 @@ namespace Countdown
             await Task.Delay(31000);
 
             // Ask for length of words and convert string to int
-            wordLength1 = Int32.Parse(await DisplayPromptAsync(Name1.Text, "How many letters in your word?")); 
+            wordLength1 = Int32.Parse(await DisplayPromptAsync(Name1.Text, "How many letters in your word?"));
             wordLength2 = Int32.Parse(await DisplayPromptAsync(Name2.Text, "How many letters in your word?"));
 
             await Task.Delay(1000);
@@ -178,14 +185,46 @@ namespace Countdown
 
             await Task.Delay(2000);
 
-            GameStatus.Text = "Starting next round...";
-
-            await Task.Delay(2000);
+            // DEBUG
+            // currentRound = 6;
 
             // Begin next round out of no. of max rounds specified
             if (currentRound < rounds)
             {
+                GameStatus.Text = "Starting next round...";
+
+                await Task.Delay(2000);
+
                 NextRound();
+            }
+
+            // Game end
+            else
+            {
+                SaveResults(); // Save results of the game to History page
+
+                if (Int32.Parse(Score1.Text) > Int32.Parse(Score2.Text))
+                {
+                    await DisplayAlert("Congratulations " + Name1.Text, "You have won this game of countdown.", "OK");
+                }
+
+                else if (Int32.Parse(Score2.Text) > Int32.Parse(Score1.Text))
+                {
+                    await DisplayAlert("Congratulations " + Name2.Text, "You have won this game of countdown.", "OK");
+                }
+
+                else if (Int32.Parse(Score1.Text) == Int32.Parse(Score2.Text))
+                {
+                    await DisplayAlert("It's a Tie!", Name1.Text + " and " + Name2.Text + ", you two ended the game with the same score!", "OK");
+                }
+
+                bool answer = await DisplayAlert("Game Over", "Would you like to play another game?", "Yes", "No");
+                Debug.WriteLine("Answer: " + answer);
+
+                if (answer == true)
+                {
+                    StartGame();
+                }
             }
         }
         private async void PlayAudio()
@@ -200,8 +239,8 @@ namespace Countdown
         private void StartTimer()
         {
             timeRemaining = 30; // Reset the time
-           
-            if(timer != null)
+
+            if (timer != null)
             {
                 timer.Tick -= TimerTick;
             }
@@ -217,6 +256,7 @@ namespace Countdown
         {
             Timer.Text = (--timeRemaining).ToString();
 
+            // Stop timer when time reaches 0
             if (timeRemaining == 0)
             {
                 timer.Stop();
@@ -231,7 +271,7 @@ namespace Countdown
             ++currentRound;
             buttonPressed = 0;
 
-            // Switch the player
+            // Switch the starting player
             if (playerTurn == 1)
             {
                 playerTurn = 2;
@@ -257,7 +297,7 @@ namespace Countdown
             VButton.IsEnabled = true;
             CButton.IsEnabled = true;
 
-            LetterBox.Text = null; 
+            LetterBox.Text = null;
         }
 
 
@@ -269,19 +309,20 @@ namespace Countdown
             // Check that the word matches the length that was given by the player
             if (wordChars.Length != length)
             {
-               
+
                 if (name == Name1.Text)
                 {
                     wordLength1 = 0; // Player gets 0 points if there is an issue with their word
                     await DisplayAlert("Error", Name1.Text + ", the word you have chosen does not match the specified length of your word", "Okay");
+                    return;
                 }
 
                 else if (name == Name2.Text)
                 {
                     wordLength2 = 0;
                     await DisplayAlert("Error", Name2.Text + ", the word you have chosen does not match the specified length of your word", "Okay");
+                    return;
                 }
-                return;
             }
 
             // Clone drawnLetters[] to be able to keep track of what letters were checked and to only check them once
@@ -295,8 +336,8 @@ namespace Countdown
                 {
                     if (lettersAvailable[i] == letter)
                     {
-                        lettersAvailable[i] = '\0'; // The found letter is null 
-                        found = 1; 
+                        lettersAvailable[i] = '\0'; // Remove found letter
+                        found = 1;
                         break;
                     }
                 }
@@ -308,15 +349,16 @@ namespace Countdown
                     {
                         wordLength1 = 0;
                         await DisplayAlert("Error", Name1.Text + ", the word you chose contains an invalid letter", "Okay");
+                        return;
                     }
 
                     else if (name == Name2.Text)
                     {
                         wordLength2 = 0;
                         await DisplayAlert("Error", Name2.Text + ", the word you chose contains an invalid letter", "Okay");
+                        return;
 
                     }
-                    return;
                 }
             }
 
@@ -331,23 +373,25 @@ namespace Countdown
             {
                 if (word == line) // Word found
                 {
-                    s.Close(); 
+                    s.Close();
                     return;
                 }
             }
 
+            // If word is not found in the dictionary
             if (name == Name1.Text)
             {
                 wordLength1 = 0;
-                await DisplayAlert("Error", Name1.Text + ", your word does not exist in the dictionary", "Okay"); // If word is not found in the dictionary
+                await DisplayAlert("Error", Name1.Text + ", your word does not exist in the dictionary", "Okay");
+                return;
             }
 
             else if (name == Name2.Text)
             {
                 wordLength2 = 0;
-                await DisplayAlert("Error", Name2.Text + ", your word does not exist in the dictionary", "Okay"); // If word is not found in the dictionary
+                await DisplayAlert("Error", Name2.Text + ", your word does not exist in the dictionary", "Okay");
+                return;
             }
-            return;
         }
 
         private async void UpdateScore(int length1, int length2)
@@ -366,6 +410,13 @@ namespace Countdown
             {
                 Score2.Text = (currentScore2 + length2).ToString(); // Add to player 2's score
                 GameStatus.Text = (Name2.Text + " wins the round!");
+            }
+
+            if (length1 == length2) // Both players' words are the same length
+            {
+                Score1.Text = (currentScore1 + length1).ToString();
+                Score2.Text = (currentScore2 = length2).ToString();
+                GameStatus.Text = ("It's a tie!");
             }
         }
 
@@ -388,14 +439,9 @@ namespace Countdown
             }
         }
 
-        private void SaveGame()
+        private void SaveResults()
         {
 
-        }
-
-        private void LoadGame()
-        {
-        
         }
     }
 }
