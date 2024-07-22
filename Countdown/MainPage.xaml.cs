@@ -25,7 +25,7 @@ namespace Countdown
         public int playerTurn;
         public int currentRound;
         private int rounds = Preferences.Get("SelectedRounds", 6);
-        public int timeRemaining = Preferences.Get("SelectedTime", 30);
+        public int timeRemaining;
         public int wordLength1;
         public int wordLength2;
         public string word1;
@@ -51,7 +51,7 @@ namespace Countdown
             playerTurn = r.Next(1, 3); // Decides which player to go first
             currentRound = 1;
             buttonPressed = 0;
-            Timer.Text = $"{timeRemaining}";
+            Timer.Text = "30";
             Score1.Text = "0";
             Score2.Text = "0";
 
@@ -239,13 +239,13 @@ namespace Countdown
             var player = _audioManager.CreatePlayer(await FileSystem.OpenAppPackageFileAsync("clock.mp3"));
 
             player.Play(); // Play the clock music 
-            await Task.Delay(32000); // Wait 32 seconds to allow the music to play fully
+            await Task.Delay(32000); // Wait to allow the music to play fully
             player.Dispose(); // Dispose when not needed to prevent memory leak
         }
 
         private void StartTimer()
         {
-            timeRemaining = Preferences.Get("SelectedTime", 30); // Reset the time
+            timeRemaining = 30; // Reset the time
 
             if (timer != null)
             {
@@ -274,7 +274,7 @@ namespace Countdown
         private async void NextRound()
         {
             // Reset variabes
-            Timer.Text = Preferences.Get("TimeRemaining", 30).ToString();
+            Timer.Text = "30";
             ++currentRound;
             buttonPressed = 0;
 

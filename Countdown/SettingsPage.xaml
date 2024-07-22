@@ -41,6 +41,7 @@
                 </Button.Shadow>
             </Button>
 
+            <!-- Choose number of rounds -->
             <Picker x:Name="RoundsPicker"
                     Margin="30, 30, 0, 15"
                     Title="Rounds"   
@@ -64,29 +65,6 @@
                         <x:Int32>8</x:Int32>
                         <x:Int32>9</x:Int32>
                         <x:Int32>10</x:Int32>
-                    </x:Array>
-                </Picker.ItemsSource>
-            </Picker>
-
-            <Picker x:Name="TimePicker"
-                    Margin="30, 15, 0, 15"
-                    Title="Timer"   
-                    TitleColor="White"
-                    WidthRequest="150"
-                    HeightRequest="70"
-                    HorizontalOptions="Start"
-                    FontSize="15"
-                    BackgroundColor="#006EFF"
-                    SelectedItem="{Binding SelectedTime}">
-
-                <Picker.ItemsSource>
-                    <x:Array Type="{x:Type x:Int32}">
-                        <x:Int32>15</x:Int32>
-                        <x:Int32>30</x:Int32>
-                        <x:Int32>45</x:Int32>
-                        <x:Int32>60</x:Int32>
-                        <x:Int32>75</x:Int32>
-                        <x:Int32>90</x:Int32>
                     </x:Array>
                 </Picker.ItemsSource>
             </Picker>

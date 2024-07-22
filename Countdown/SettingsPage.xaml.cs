@@ -8,15 +8,12 @@ public partial class SettingsPage : ContentPage
 	{
 		InitializeComponent();
 
-        RoundsPicker.SelectedItem = Preferences.Get("SelectedRounds", 6);
-        TimePicker.SelectedItem = Preferences.Get("SelectedTime", 30);
+        RoundsPicker.SelectedItem = Preferences.Get("SelectedRounds", 6); // Set default 
     }
 
     private void BackButton_Clicked(object sender, EventArgs e)
     {
         Preferences.Set("SelectedRounds", (int)RoundsPicker.SelectedItem);
-        Preferences.Set("SelectedTime", (int)TimePicker.SelectedItem);
-
 		App.Current.MainPage = new NavigationPage(new HomePage());
     }
 }
