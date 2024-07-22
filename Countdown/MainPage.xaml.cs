@@ -41,7 +41,6 @@ namespace Countdown
             InitializeComponent();
             this._audioManager = audioManager;
             _downloadManager = new DownloadManager();
-            gameStatsList = new List<GameStats>();
             DownloadDictionary();
             StartGame();
         }
@@ -452,11 +451,29 @@ namespace Countdown
 
         private void SaveResults()
         {
+            // Make new stats object for finished game
             var gameStat = new GameStats(Name1.Text, Name2.Text, Int32.Parse(Score1.Text), Int32.Parse(Score2.Text), DateTime.Now.ToString("yyyy-MM-dd hh:mm"));
-            gameStatsList.Add(gameStat);
 
             string filepath = Path.Combine(FileSystem.AppDataDirectory, "gamestats.json");
-            string json = JsonConvert.SerializeObject(gameStatsList);
+
+            List<GameStats> gameStatsList = new List<GameStats>();
+
+            if (File.Exists(filepath))
+            {
+                // Get exisiting file data
+                string existingJson = File.ReadAllText(filepath);
+                var existingStats = JsonConvert.DeserializeObject<List<GameStats>>(existingJson); // Deserialize JSON
+
+                if (existingStats != null)
+                {
+                    gameStatsList = existingStats;
+                }
+            }
+
+            gameStatsList.Add(gameStat);
+
+            string json = JsonConvert.SerializeObject(gameStatsList, Formatting.Indented); // Reserialize JSON and add to file
+
             File.WriteAllText(filepath, json);
         }
     }
