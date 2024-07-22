@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Countdown.HistoryPage"
+             Title="HistoryPage">
+
+    <Grid>
+
+        <!-- Background -->
+        <BoxView BackgroundColor="CornflowerBlue"
+                HeightRequest="800"
+                WidthRequest="450">
+            <BoxView.Background>
+                <LinearGradientBrush EndPoint="0.8,0.8">
+                    <GradientStop Color="CornflowerBlue"
+                                 Offset="0.1"/>
+                    <GradientStop Color="LightBlue"
+                                 Offset="1.0"/>
+                </LinearGradientBrush>
+
+            </BoxView.Background>
+        </BoxView>
+
+        <ScrollView>   
+            <VerticalStackLayout HeightRequest="800"
+                                 WidthRequest="450">
+
+                <Button x:Name="BackButton"
+                        TextColor="White"
+                        BackgroundColor="#006EFF"
+                        FontSize="18"
+                        Margin="30, 30, 0, 15"
+                        HorizontalOptions="Start"
+                        WidthRequest="90"
+                        Padding="15"
+                        Text="Back"
+                        Clicked="BackButton_Clicked">
+                    <Button.Shadow>
+                        <Shadow Brush="Black"
+                                Offset="0, 3" 
+                                Radius="4"/>
+                    </Button.Shadow>
+
+
+                </Button>
+
+                <ListView x:Name="GameStatsListView" ItemsSource="{Binding GameStats}" VerticalOptions="FillAndExpand" BackgroundColor="#036FD7" Margin="12">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <ViewCell>
+                                <VerticalStackLayout Margin="20">
+                                    <Label Text="{Binding timestamp}" FontSize="20" FontAttributes="Bold"/>
+                               
+                                    <HorizontalStackLayout>
+                                        <Label>
+                                            <Label.FormattedText>
+                                                <FormattedString>
+                                                    <Span Text="{Binding player1}" FontSize="20"/>
+                                                    <Span Text=":  " FontSize="20"/>
+                                                    <Span Text="{Binding score1}" FontSize="20" />
+                                                </FormattedString>
+                                            </Label.FormattedText>
+                                        </Label>
+                                    </HorizontalStackLayout>
+
+                                    <HorizontalStackLayout>
+                                        <Label>
+                                            <Label.FormattedText>
+                                                <FormattedString>
+                                                    <Span Text="{Binding player2}" FontSize="20"/>
+                                                    <Span Text=":  " FontSize="20"/>
+                                                    <Span Text="{Binding score2}" FontSize="20" />
+                                                </FormattedString>
+                                            </Label.FormattedText>
+                                        </Label>
+                                    </HorizontalStackLayout>
+
+                                </VerticalStackLayout>
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
+</ContentPage>

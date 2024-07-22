@@ -12,13 +12,14 @@ public partial class HomePage : ContentPage
 		InitializeComponent();
 	}
 
+
     private void StartBtn_Clicked(object sender, EventArgs e)
     {
 		App.Current.MainPage = new NavigationPage(new MainPage(audioManager));
     }
 
-    private void LoadBtn_Clicked(object sender, EventArgs e)
+    private void HistoryBtn_Clicked(object sender, EventArgs e)
     {
-        App.Current.MainPage = new NavigationPage(new MainPage(audioManager));
+        App.Current.MainPage = new NavigationPage(new HistoryPage(audioManager));
     }
 }

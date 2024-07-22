@@ -16,5 +16,10 @@
         Title="Main"
         ContentTemplate="{DataTemplate local:MainPage}"
         Route="MainPage" />
+    
+    <ShellContent
+        Title="History"
+        ContentTemplate="{DataTemplate local:HistoryPage}"
+        Route="HistoryPage" />
 
 </Shell>

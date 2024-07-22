@@ -58,15 +58,15 @@
                     </Button.Shadow>
             </Button>
 
-            <Button x:Name="LoadBtn"
-                    Text="Load Game"
+            <Button x:Name="HistoryBtn"
+                    Text="History"
                     HorizontalOptions="CenterAndExpand"
                     VerticalOptions="CenterAndExpand"
                     TextColor="White"
                     BackgroundColor="#006EFF"
                     FontSize="30"
                     Margin="25"
-                    Clicked="LoadBtn_Clicked">
+                    Clicked="HistoryBtn_Clicked">
 
                 <Button.Shadow>
                     <Shadow Brush="Black"

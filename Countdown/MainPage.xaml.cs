@@ -2,11 +2,15 @@
 using Plugin.Maui.Audio;
 using Microsoft.Maui.Storage;
 using System.Diagnostics;
+using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 
 namespace Countdown
 {
     public partial class MainPage : ContentPage
     {
+        private List<GameStats> gameStatsList;
+
         // Fields
         private readonly IAudioManager _audioManager;
         private readonly DownloadManager _downloadManager;
@@ -37,6 +41,7 @@ namespace Countdown
             InitializeComponent();
             this._audioManager = audioManager;
             _downloadManager = new DownloadManager();
+            gameStatsList = new List<GameStats>();
             DownloadDictionary();
             StartGame();
         }
@@ -186,7 +191,7 @@ namespace Countdown
             await Task.Delay(2000);
 
             // DEBUG
-            // currentRound = 6;
+            currentRound = 6;
 
             // Begin next round out of no. of max rounds specified
             if (currentRound < rounds)
@@ -225,6 +230,12 @@ namespace Countdown
                 {
                     StartGame();
                 }
+
+                else if (answer == false) 
+                {
+                    App.Current.MainPage = new NavigationPage(new HomePage(_audioManager));
+                }
+
             }
         }
         private async void PlayAudio()
@@ -441,7 +452,12 @@ namespace Countdown
 
         private void SaveResults()
         {
+            var gameStat = new GameStats(Name1.Text, Name2.Text, Int32.Parse(Score1.Text), Int32.Parse(Score2.Text), DateTime.Now.ToString("yyyy-MM-dd hh:mm"));
+            gameStatsList.Add(gameStat);
 
+            string filepath = Path.Combine(FileSystem.AppDataDirectory, "gamestats.json");
+            string json = JsonConvert.SerializeObject(gameStatsList);
+            File.WriteAllText(filepath, json);
         }
     }
 }
