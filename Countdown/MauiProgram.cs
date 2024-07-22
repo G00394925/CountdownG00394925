@@ -18,6 +18,7 @@ namespace Countdown
 
             builder.Services.AddSingleton(AudioManager.Current);
             builder.Services.AddTransient<HomePage>();
+            builder.Services.AddTransient<MainPage>();
 #if DEBUG
     		builder.Logging.AddDebug();
 #endif

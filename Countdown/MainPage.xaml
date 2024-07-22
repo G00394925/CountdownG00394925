@@ -16,10 +16,9 @@
                     <GradientStop Color="LightBlue"
                                   Offset="1.0"/>
                 </LinearGradientBrush>
-                                     
             </BoxView.Background>
         </BoxView>
-        
+
         <VerticalStackLayout HeightRequest="800"
                              WidthRequest="450">
 
@@ -53,19 +52,19 @@
                             </LinearGradientBrush>
                         </BoxView.Background>
                     </BoxView>
-                    
+
                     <Label x:Name="Timer"
                            HorizontalOptions="CenterAndExpand"
                            VerticalOptions="CenterAndExpand"
                            WidthRequest="110"
                            FontSize="40"
                            Padding="30, 10, 30, 10"
-                           Text="30"
+                           Text="{Binding SelectedTime}"
                            HorizontalTextAlignment="Center"
                            TextColor="Black"/>
                 </Grid>
             </Frame>
-            
+
             <!-- Letters -->
             <Frame Padding="0"
                    VerticalOptions="Center"
@@ -73,7 +72,7 @@
                    CornerRadius="0"
                    BorderColor="White"
                    Margin="10, 15, 10, 2">
-                
+
                 <Label x:Name="LetterBox"
                        HorizontalOptions="CenterAndExpand"
                        FontSize="60"
@@ -81,7 +80,6 @@
                        Text="WELCOME"
                        TextColor="White"
                        BackgroundColor="Blue"/>
-
             </Frame>
 
             <!-- Buttons -->
@@ -125,7 +123,7 @@
                     </Button.Shadow>
                 </Button>
             </HorizontalStackLayout>
-            
+
             <!-- Player Info and Scores -->
             <HorizontalStackLayout x:Name="ScoreContainer"
                                    Spacing="60"
@@ -185,8 +183,6 @@
                     </VerticalStackLayout>
                 </Border>
             </HorizontalStackLayout>
-
         </VerticalStackLayout>
     </Grid>
-    
 </ContentPage>

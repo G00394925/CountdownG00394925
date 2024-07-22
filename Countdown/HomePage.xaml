@@ -82,7 +82,8 @@
                     TextColor="White"
                     BackgroundColor="#006EFF"
                     FontSize="30"
-                    Margin="25">
+                    Margin="25"
+                    Clicked="SettingsBtn_Clicked">
 
                 <Button.Shadow>
                     <Shadow Brush="Black"

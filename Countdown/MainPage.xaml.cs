@@ -24,8 +24,8 @@ namespace Countdown
         public int buttonPressed;
         public int playerTurn;
         public int currentRound;
-        public int rounds = 6;
-        public int timeRemaining;
+        private int rounds = Preferences.Get("SelectedRounds", 6);
+        public int timeRemaining = Preferences.Get("SelectedTime", 30);
         public int wordLength1;
         public int wordLength2;
         public string word1;
@@ -36,7 +36,7 @@ namespace Countdown
         public char[] consonants = ['B', 'B', 'C', 'C', 'C', 'D', 'D', 'D', 'D', 'D', 'D', 'F', 'F', 'G', 'G', 'G', 'H', 'H', 'J', 'K', 'L', 'L', 'L', 'L', 'L', 'M', 'M', 'M', 'M', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'P', 'P', 'P', 'P', 'Q', 'R', 'R', 'R', 'R', 'R', 'R', 'R', 'R', 'R', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'T', 'T', 'T', 'T', 'T', 'T', 'T', 'T', 'T', 'V', 'W', 'X', 'Y', 'Z'];
         public char[] drawnLetters = new char[9]; // Store the drawn letters
 
-        public MainPage(IAudioManager audioManager) // Audiomanager parameters were added to get and set audioManager object
+        public MainPage(IAudioManager audioManager) 
         {
             InitializeComponent();
             this._audioManager = audioManager;
@@ -51,7 +51,7 @@ namespace Countdown
             playerTurn = r.Next(1, 3); // Decides which player to go first
             currentRound = 1;
             buttonPressed = 0;
-            Timer.Text = "30";
+            Timer.Text = $"{timeRemaining}";
             Score1.Text = "0";
             Score2.Text = "0";
 
@@ -164,8 +164,8 @@ namespace Countdown
             await Task.Delay(31000);
 
             // Ask for length of words and convert string to int
-            wordLength1 = Int32.Parse(await DisplayPromptAsync(Name1.Text, "How many letters in your word?"));
-            wordLength2 = Int32.Parse(await DisplayPromptAsync(Name2.Text, "How many letters in your word?"));
+            wordLength1 = Int32.Parse(await DisplayPromptAsync(Name1.Text, "How many letters in your word?", keyboard: Keyboard.Numeric, maxLength: 1));
+            wordLength2 = Int32.Parse(await DisplayPromptAsync(Name2.Text, "How many letters in your word?", keyboard: Keyboard.Numeric, maxLength: 1));
 
             await Task.Delay(1000);
 
@@ -188,9 +188,6 @@ namespace Countdown
             GameStatus.Text = "Scores have been updated";
 
             await Task.Delay(2000);
-
-            // DEBUG
-            currentRound = 6;
 
             // Begin next round out of no. of max rounds specified
             if (currentRound < rounds)
@@ -232,7 +229,7 @@ namespace Countdown
 
                 else if (answer == false) 
                 {
-                    App.Current.MainPage = new NavigationPage(new HomePage(_audioManager));
+                    App.Current.MainPage = new NavigationPage(new HomePage());
                 }
 
             }
@@ -248,7 +245,7 @@ namespace Countdown
 
         private void StartTimer()
         {
-            timeRemaining = 30; // Reset the time
+            timeRemaining = Preferences.Get("SelectedTime", 30); // Reset the time
 
             if (timer != null)
             {
@@ -277,7 +274,7 @@ namespace Countdown
         private async void NextRound()
         {
             // Reset variabes
-            Timer.Text = "30";
+            Timer.Text = Preferences.Get("TimeRemaining", 30).ToString();
             ++currentRound;
             buttonPressed = 0;
 
@@ -323,14 +320,14 @@ namespace Countdown
                 if (name == Name1.Text)
                 {
                     wordLength1 = 0; // Player gets 0 points if there is an issue with their word
-                    await DisplayAlert("Error", Name1.Text + ", the word you have chosen does not match the specified length of your word", "Okay");
+                    await DisplayAlert("Wrong Word Length", Name1.Text + ", the word you have chosen does not match the specified length of your word", "Okay");
                     return;
                 }
 
                 else if (name == Name2.Text)
                 {
                     wordLength2 = 0;
-                    await DisplayAlert("Error", Name2.Text + ", the word you have chosen does not match the specified length of your word", "Okay");
+                    await DisplayAlert("Wrong Word Length", Name2.Text + ", the word you have chosen does not match the specified length of your word", "Okay");
                     return;
                 }
             }
@@ -358,14 +355,14 @@ namespace Countdown
                     if (name == Name1.Text)
                     {
                         wordLength1 = 0;
-                        await DisplayAlert("Error", Name1.Text + ", the word you chose contains an invalid letter", "Okay");
+                        await DisplayAlert("Invalid Letter", Name1.Text + ", the word you chose contains an invalid letter", "Okay");
                         return;
                     }
 
                     else if (name == Name2.Text)
                     {
                         wordLength2 = 0;
-                        await DisplayAlert("Error", Name2.Text + ", the word you chose contains an invalid letter", "Okay");
+                        await DisplayAlert("Invalid Letter", Name2.Text + ", the word you chose contains an invalid letter", "Okay");
                         return;
 
                     }
@@ -392,14 +389,14 @@ namespace Countdown
             if (name == Name1.Text)
             {
                 wordLength1 = 0;
-                await DisplayAlert("Error", Name1.Text + ", your word does not exist in the dictionary", "Okay");
+                await DisplayAlert("Word not found", Name1.Text + ", your word does not exist in the dictionary", "Okay");
                 return;
             }
 
             else if (name == Name2.Text)
             {
                 wordLength2 = 0;
-                await DisplayAlert("Error", Name2.Text + ", your word does not exist in the dictionary", "Okay");
+                await DisplayAlert("Word not found", Name2.Text + ", your word does not exist in the dictionary", "Okay");
                 return;
             }
         }

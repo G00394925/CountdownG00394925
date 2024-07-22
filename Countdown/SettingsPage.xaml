@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Countdown.SettingsPage"
+             Title="SettingsPage">
+    
+    <Grid>
+
+        <!-- Background -->
+        <BoxView BackgroundColor="CornflowerBlue"
+                 HeightRequest="800"
+                 WidthRequest="450">
+            <BoxView.Background>
+                <LinearGradientBrush EndPoint="0.8,0.8">
+                    <GradientStop Color="CornflowerBlue"
+                                  Offset="0.1"/>
+                    <GradientStop Color="LightBlue"
+                                  Offset="1.0"/>
+                </LinearGradientBrush>
+            </BoxView.Background>
+        </BoxView>
+
+        <VerticalStackLayout HeightRequest="800"
+                             WidthRequest="450">
+
+            <!-- Back Button -->
+            <Button x:Name="BackButton"
+                        TextColor="White"
+                        BackgroundColor="#006EFF"
+                        FontSize="18"
+                        Margin="30, 30, 0, 15"
+                        HorizontalOptions="Start"
+                        WidthRequest="90"
+                        Padding="15"
+                        Text="Back"
+                        Clicked="BackButton_Clicked">
+                <Button.Shadow>
+                    <Shadow Brush="Black"
+                                Offset="0, 3" 
+                                Radius="4"/>
+                </Button.Shadow>
+            </Button>
+
+            <Picker x:Name="RoundsPicker"
+                    Margin="30, 30, 0, 15"
+                    Title="Rounds"   
+                    TitleColor="White"
+                    WidthRequest="150"
+                    HeightRequest="70"
+                    HorizontalOptions="Start"
+                    FontSize="15"
+                    BackgroundColor="#006EFF"
+                    SelectedIndex="{Binding SelectedRounds}">
+
+                <Picker.ItemsSource>
+                    <x:Array Type="{x:Type x:Int32}">
+                        <x:Int32>1</x:Int32>
+                        <x:Int32>2</x:Int32>
+                        <x:Int32>3</x:Int32>
+                        <x:Int32>4</x:Int32>
+                        <x:Int32>5</x:Int32>
+                        <x:Int32>6</x:Int32>
+                        <x:Int32>7</x:Int32>
+                        <x:Int32>8</x:Int32>
+                        <x:Int32>9</x:Int32>
+                        <x:Int32>10</x:Int32>
+                    </x:Array>
+                </Picker.ItemsSource>
+            </Picker>
+
+            <Picker x:Name="TimePicker"
+                    Margin="30, 15, 0, 15"
+                    Title="Timer"   
+                    TitleColor="White"
+                    WidthRequest="150"
+                    HeightRequest="70"
+                    HorizontalOptions="Start"
+                    FontSize="15"
+                    BackgroundColor="#006EFF"
+                    SelectedItem="{Binding SelectedTime}">
+
+                <Picker.ItemsSource>
+                    <x:Array Type="{x:Type x:Int32}">
+                        <x:Int32>15</x:Int32>
+                        <x:Int32>30</x:Int32>
+                        <x:Int32>45</x:Int32>
+                        <x:Int32>60</x:Int32>
+                        <x:Int32>75</x:Int32>
+                        <x:Int32>90</x:Int32>
+                    </x:Array>
+                </Picker.ItemsSource>
+            </Picker>
+
+        </VerticalStackLayout>
+    </Grid>
+</ContentPage>

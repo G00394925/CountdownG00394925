@@ -6,12 +6,10 @@ namespace Countdown;
 
 public partial class HistoryPage : ContentPage
 {
-	private readonly IAudioManager _audioManager;
 	public ObservableCollection<GameStats> GameStats { get; set; } = new ObservableCollection<GameStats>();
 
-	public HistoryPage(IAudioManager audioManager)
+	public HistoryPage()
 	{
-		this._audioManager = audioManager;
 		InitializeComponent();
 		BindingContext = this;
 		LoadStats();
@@ -38,6 +36,6 @@ public partial class HistoryPage : ContentPage
 
     private void BackButton_Clicked(object sender, EventArgs e)
     {
-        App.Current.MainPage = new NavigationPage(new HomePage(_audioManager));
+        App.Current.MainPage = new NavigationPage(new HomePage());
     }
 }
