@@ -17,7 +17,6 @@
                     <GradientStop Color="LightBlue"
                                  Offset="1.0"/>
                 </LinearGradientBrush>
-
             </BoxView.Background>
         </BoxView>
 

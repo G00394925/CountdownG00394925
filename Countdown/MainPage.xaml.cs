@@ -34,7 +34,7 @@ namespace Countdown
         // Letter Arrays
         public char[] vowels = ['A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'I', 'I', 'I', 'I', 'I', 'I', 'I', 'I', 'I', 'I', 'I', 'I', 'I', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'U', 'U', 'U', 'U', 'U', 'U'];
         public char[] consonants = ['B', 'B', 'C', 'C', 'C', 'D', 'D', 'D', 'D', 'D', 'D', 'F', 'F', 'G', 'G', 'G', 'H', 'H', 'J', 'K', 'L', 'L', 'L', 'L', 'L', 'M', 'M', 'M', 'M', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'P', 'P', 'P', 'P', 'Q', 'R', 'R', 'R', 'R', 'R', 'R', 'R', 'R', 'R', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'T', 'T', 'T', 'T', 'T', 'T', 'T', 'T', 'T', 'V', 'W', 'X', 'Y', 'Z'];
-        public char[] drawnLetters = new char[9]; // Store the drawn letters
+        public char[] drawnLetters = new char[9]; 
 
         public MainPage(IAudioManager audioManager) 
         {
@@ -161,7 +161,7 @@ namespace Countdown
             StartTimer();
             PlayAudio();
 
-            await Task.Delay(31000);
+            await Task.Delay(3000);
 
             // Ask for length of words and convert string to int
             wordLength1 = Int32.Parse(await DisplayPromptAsync(Name1.Text, "How many letters in your word?", keyboard: Keyboard.Numeric, maxLength: 1));
@@ -220,14 +220,13 @@ namespace Countdown
                 }
 
                 bool answer = await DisplayAlert("Game Over", "Would you like to play another game?", "Yes", "No");
-                Debug.WriteLine("Answer: " + answer);
 
-                if (answer == true)
+                if (answer == true) // Yes
                 {
                     StartGame();
                 }
 
-                else if (answer == false) 
+                else if (answer == false) // No
                 {
                     App.Current.MainPage = new NavigationPage(new HomePage());
                 }
@@ -261,7 +260,7 @@ namespace Countdown
 
         private void TimerTick(object sender, EventArgs e)
         {
-            Timer.Text = (--timeRemaining).ToString();
+            Timer.Text = (--timeRemaining).ToString(); // Update Timer label
 
             // Stop timer when time reaches 0
             if (timeRemaining == 0)
@@ -403,19 +402,18 @@ namespace Countdown
 
         private async void UpdateScore(int length1, int length2)
         {
-            // Convert the current scores to integers
             int currentScore1 = Int32.Parse(Score1.Text);
             int currentScore2 = Int32.Parse(Score2.Text);
 
             if (length1 > length2) // Player 1 has longer word
             {
-                Score1.Text = (currentScore1 + length1).ToString(); // Add to player 1's score
+                Score1.Text = (currentScore1 + length1).ToString(); 
                 GameStatus.Text = (Name1.Text + " wins the round!");
             }
 
             if (length2 > length1) // Player 2 has longer word
             {
-                Score2.Text = (currentScore2 + length2).ToString(); // Add to player 2's score
+                Score2.Text = (currentScore2 + length2).ToString(); 
                 GameStatus.Text = (Name2.Text + " wins the round!");
             }
 
@@ -426,7 +424,6 @@ namespace Countdown
                 GameStatus.Text = ("It's a tie!");
             }
         }
-
         private async void DownloadDictionary()
         {
             try
@@ -445,7 +442,6 @@ namespace Countdown
                 await DisplayAlert("Error", ex.Message, "OK");
             }
         }
-
         private void SaveResults()
         {
             // Make new stats object for finished game
@@ -461,6 +457,7 @@ namespace Countdown
                 string existingJson = File.ReadAllText(filepath);
                 var existingStats = JsonConvert.DeserializeObject<List<GameStats>>(existingJson); // Deserialize JSON
 
+                // Get existing data to ammend to it
                 if (existingStats != null)
                 {
                     gameStatsList = existingStats;
