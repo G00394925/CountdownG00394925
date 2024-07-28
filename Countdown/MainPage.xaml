@@ -59,7 +59,7 @@
                            WidthRequest="110"
                            FontSize="40"
                            Padding="30, 10, 30, 10"
-                           Text="{Binding SelectedTime}"
+                           Text="30"
                            HorizontalTextAlignment="Center"
                            TextColor="Black"/>
                 </Grid>

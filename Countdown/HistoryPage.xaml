@@ -20,77 +20,77 @@
             </BoxView.Background>
         </BoxView>
 
-            <VerticalStackLayout HeightRequest="800"
+        <VerticalStackLayout HeightRequest="800"
                                  WidthRequest="350">
 
-                <!-- Back Button -->
-                <Button x:Name="BackButton"
+            <!-- Back Button -->
+            <Button x:Name="BackButton"
                         TextColor="White"
                         BackgroundColor="#006EFF"
                         FontSize="18"
-                        Margin="0, 50, 0, 30"
+                        Margin="0, 80, 0, 30"
                         HorizontalOptions="Start"
                         WidthRequest="90"
                         Padding="15"
                         Text="Back"
                         Clicked="BackButton_Clicked">
-                    <Button.Shadow>
-                        <Shadow Brush="Black"
+                <Button.Shadow>
+                    <Shadow Brush="Black"
                                 Offset="0, 3" 
                                 Radius="4"/>
-                    </Button.Shadow>
-                </Button>
-                
-                <!-- List of previous games -->
-                <ScrollView>   
-                    <Border Stroke="White"
+                </Button.Shadow>
+            </Button>
+
+            <!-- List of previous games -->
+            <ScrollView>
+                <Border Stroke="White"
                            Margin="12"
                            VerticalOptions="CenterAndExpand"
                            HorizontalOptions="CenterAndExpand"
                            BackgroundColor="Transparent"
                            StrokeThickness="2">
-                        <ListView x:Name="GameStatsListView" ItemsSource="{Binding GameStats}" VerticalOptions="FillAndExpand" BackgroundColor="#036FD7" HasUnevenRows="True" >
-                            <ListView.ItemTemplate>
-                                <DataTemplate>
-                                    <ViewCell>
-                                        <VerticalStackLayout>
-                                            <BoxView BackgroundColor="White"
+                    <ListView x:Name="GameStatsListView" ItemsSource="{Binding GameStats}" VerticalOptions="FillAndExpand" BackgroundColor="#036FD7" HasUnevenRows="True" >
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <ViewCell>
+                                    <VerticalStackLayout>
+                                        <BoxView BackgroundColor="White"
                                                      HeightRequest="1"
                                                      WidthRequest="450"
                                                      VerticalOptions="Start"
                                                      HorizontalOptions="Center"/>
-                                            <Label Text="{Binding timestamp}" FontSize="20" FontAttributes="Bold" Margin="7, 4, 7, 0" VerticalOptions="CenterAndExpand"/>
+                                        <Label Text="{Binding timestamp}" FontSize="20" FontAttributes="Bold" Margin="7, 4, 7, 0" VerticalOptions="CenterAndExpand"/>
 
-                                            <HorizontalStackLayout>
-                                                <Label Margin="7, 4, 7, 0" VerticalOptions="CenterAndExpand">
-                                                    <Label.FormattedText>
-                                                        <FormattedString>
-                                                            <Span Text="{Binding player1}" FontSize="20"/>
-                                                            <Span Text=": " FontSize="20"/>
-                                                            <Span Text="{Binding score1}" FontSize="20" />
-                                                        </FormattedString>
-                                                    </Label.FormattedText>
-                                                </Label>
-                                            </HorizontalStackLayout>
+                                        <HorizontalStackLayout>
+                                            <Label Margin="7, 4, 7, 0" VerticalOptions="CenterAndExpand">
+                                                <Label.FormattedText>
+                                                    <FormattedString>
+                                                        <Span Text="{Binding player1}" FontSize="20"/>
+                                                        <Span Text=": " FontSize="20"/>
+                                                        <Span Text="{Binding score1}" FontSize="20" />
+                                                    </FormattedString>
+                                                </Label.FormattedText>
+                                            </Label>
+                                        </HorizontalStackLayout>
 
-                                            <HorizontalStackLayout>
-                                                <Label Margin="7, 4, 7, 3" VerticalOptions="CenterAndExpand">
-                                                    <Label.FormattedText>
-                                                        <FormattedString>
-                                                            <Span Text="{Binding player2}" FontSize="20"/>
-                                                            <Span Text=": " FontSize="20"/>
-                                                            <Span Text="{Binding score2}" FontSize="20" />
-                                                        </FormattedString>
-                                                    </Label.FormattedText>
-                                                </Label>
-                                            </HorizontalStackLayout>
-                                        </VerticalStackLayout>
-                                    </ViewCell>
-                                </DataTemplate>
-                            </ListView.ItemTemplate>
-                        </ListView>
-                    </Border>
-                </ScrollView>
-            </VerticalStackLayout>
+                                        <HorizontalStackLayout>
+                                            <Label Margin="7, 4, 7, 3" VerticalOptions="CenterAndExpand">
+                                                <Label.FormattedText>
+                                                    <FormattedString>
+                                                        <Span Text="{Binding player2}" FontSize="20"/>
+                                                        <Span Text=": " FontSize="20"/>
+                                                        <Span Text="{Binding score2}" FontSize="20" />
+                                                    </FormattedString>
+                                                </Label.FormattedText>
+                                            </Label>
+                                        </HorizontalStackLayout>
+                                    </VerticalStackLayout>
+                                </ViewCell>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </Border>
+            </ScrollView>
+        </VerticalStackLayout>
     </Grid>
 </ContentPage>

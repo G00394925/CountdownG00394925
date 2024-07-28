@@ -9,17 +9,6 @@ namespace Countdown
 {
     public partial class MainPage : ContentPage
     {
-        private List<GameStats> gameStatsList;
-
-        // Fields
-        private readonly IAudioManager _audioManager;
-        private readonly DownloadManager _downloadManager;
-
-        IDispatcherTimer timer;
-
-        // Create random number generator
-        Random r = new Random();
-
         // Variables
         public int buttonPressed;
         public int playerTurn;
@@ -31,10 +20,18 @@ namespace Countdown
         public string word1;
         public string word2;
 
-        // Letter Arrays
         public char[] vowels = ['A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'I', 'I', 'I', 'I', 'I', 'I', 'I', 'I', 'I', 'I', 'I', 'I', 'I', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'U', 'U', 'U', 'U', 'U', 'U'];
         public char[] consonants = ['B', 'B', 'C', 'C', 'C', 'D', 'D', 'D', 'D', 'D', 'D', 'F', 'F', 'G', 'G', 'G', 'H', 'H', 'J', 'K', 'L', 'L', 'L', 'L', 'L', 'M', 'M', 'M', 'M', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'P', 'P', 'P', 'P', 'Q', 'R', 'R', 'R', 'R', 'R', 'R', 'R', 'R', 'R', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'S', 'T', 'T', 'T', 'T', 'T', 'T', 'T', 'T', 'T', 'V', 'W', 'X', 'Y', 'Z'];
         public char[] drawnLetters = new char[9]; 
+     
+        private List<GameStats> gameStatsList;
+
+        private readonly IAudioManager _audioManager;
+        private readonly DownloadManager _downloadManager;
+
+        IDispatcherTimer timer;
+
+        Random r = new Random();
 
         public MainPage(IAudioManager audioManager) 
         {
@@ -58,7 +55,7 @@ namespace Countdown
             // Periodically update the status message to reflect on what is currently happening in the game
             GameStatus.Text = "Welcome to Countdown!";
 
-            await Task.Delay(1000); // Pacing
+            await Task.Delay(1000); // Delay Tasks for Pacing
 
             // Prompt user to input names
             Name1.Text = await DisplayPromptAsync("Welcome to Countdown", "Enter the name for Player 1", maxLength: 9);
@@ -161,7 +158,7 @@ namespace Countdown
             StartTimer();
             PlayAudio();
 
-            await Task.Delay(3000);
+            await Task.Delay(31000);
 
             // Ask for length of words and convert string to int
             wordLength1 = Int32.Parse(await DisplayPromptAsync(Name1.Text, "How many letters in your word?", keyboard: Keyboard.Numeric, maxLength: 1));

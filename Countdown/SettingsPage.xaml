@@ -28,7 +28,7 @@
                         TextColor="White"
                         BackgroundColor="#006EFF"
                         FontSize="18"
-                        Margin="30, 30, 0, 15"
+                        Margin="30, 80, 0, 15"
                         HorizontalOptions="Start"
                         WidthRequest="90"
                         Padding="15"
@@ -68,7 +68,6 @@
                     </x:Array>
                 </Picker.ItemsSource>
             </Picker>
-
         </VerticalStackLayout>
     </Grid>
 </ContentPage>
